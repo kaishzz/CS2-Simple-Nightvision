@@ -25,14 +25,6 @@ public class CS2SimpleNightvision : BasePlugin, IPluginConfig<CS2SimpleNightvisi
     {
         RegisterListener<Listeners.CheckTransmit>(OnCheckTransmit);
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
-
-        foreach (var player in Utilities.GetPlayers())
-        {
-            if (!IsHumanPlayer(player))
-                continue;
-
-            GetOrCreatePlayerState(player);
-        }
     }
 
     public override void Unload(bool hotReload)
