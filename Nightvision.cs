@@ -5,13 +5,13 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Commands;
 
-namespace CS2SimpleNightvision;
+namespace Nightvision;
 
-public class CS2SimpleNightvision : BasePlugin, IPluginConfig<CS2SimpleNightvisionConfig>
+public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
 {
     private const float NormalExposure = 1.0f;
 
-    public override string ModuleName => "CS2SimpleNightvision";
+    public override string ModuleName => "Nightvision";
     public override string ModuleAuthor => "kaish";
     public override string ModuleVersion => "1.0.0";
     public override string ModuleDescription => "Standalone temporary nightvision plugin.";
@@ -19,7 +19,7 @@ public class CS2SimpleNightvision : BasePlugin, IPluginConfig<CS2SimpleNightvisi
     private readonly Dictionary<int, PlayerNightvisionState> _playerStates = [];
     private readonly Dictionary<int, CPostProcessingVolume> _postProcessVolumes = [];
 
-    public CS2SimpleNightvisionConfig Config { get; set; } = new();
+    public NightvisionConfig Config { get; set; } = new();
 
     public override void Load(bool hotReload)
     {
@@ -35,7 +35,7 @@ public class CS2SimpleNightvision : BasePlugin, IPluginConfig<CS2SimpleNightvisi
         _playerStates.Clear();
     }
 
-    public void OnConfigParsed(CS2SimpleNightvisionConfig config)
+    public void OnConfigParsed(NightvisionConfig config)
     {
         config.MinimumIntensity = Math.Max(0.0f, config.MinimumIntensity);
 
@@ -231,7 +231,7 @@ public class CS2SimpleNightvision : BasePlugin, IPluginConfig<CS2SimpleNightvisi
         var postProcessingVolume = Utilities.CreateEntityByName<CPostProcessingVolume>("post_processing_volume");
         if (postProcessingVolume == null)
         {
-            Console.WriteLine($"[CS2SimpleNightvision] Failed to create post_processing_volume for slot {player.Slot}");
+            Console.WriteLine($"[Nightvision] Failed to create post_processing_volume for slot {player.Slot}");
             return false;
         }
 

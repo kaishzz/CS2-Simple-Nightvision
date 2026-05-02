@@ -1,9 +1,9 @@
 using CounterStrikeSharp.API.Core;
 using System.Text.Json.Serialization;
 
-namespace CS2SimpleNightvision;
+namespace Nightvision;
 
-public class CS2SimpleNightvisionConfig : BasePluginConfig
+public class NightvisionConfig : BasePluginConfig
 {
     [JsonPropertyName("Chat Prefix")]
     public string ChatPrefix { get; set; } = "[Nightvision]";
