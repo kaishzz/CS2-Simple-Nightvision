@@ -13,8 +13,8 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
 
     public override string ModuleName => "Nightvision";
     public override string ModuleAuthor => "kaish";
-    public override string ModuleVersion => "1.0.0";
-    public override string ModuleDescription => "Standalone temporary nightvision plugin.";
+    public override string ModuleVersion => "1.0";
+    public override string ModuleDescription => "Standalone temporary nightvision plugin";
 
     private readonly Dictionary<int, PlayerNightvisionState> _playerStates = [];
     private readonly Dictionary<int, CPostProcessingVolume> _postProcessVolumes = [];
