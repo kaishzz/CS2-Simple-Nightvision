@@ -10,6 +10,7 @@ namespace Nightvision;
 public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
 {
     private const float NormalExposure = 1.0f;
+    private const string ChatPrefix = "[\x03开水服\x01]";
 
     public override string ModuleName => "Nightvision";
     public override string ModuleAuthor => "kaish";
@@ -44,9 +45,6 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
 
         config.DefaultIntensity = Math.Clamp(config.DefaultIntensity, config.MinimumIntensity, config.MaximumIntensity);
 
-        if (string.IsNullOrWhiteSpace(config.ChatPrefix))
-            config.ChatPrefix = "[Nightvision]";
-
         Config = config;
 
         foreach (var state in _playerStates.Values)
@@ -59,7 +57,7 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
     {
         if (!IsAliveHumanPlayer(player))
         {
-            Reply(player, commandInfo, $"{Config.ChatPrefix} You must be alive to toggle nightvision.");
+            Reply(player, commandInfo, $"{ChatPrefix} 你必须在存活状态下才能切换夜视仪");
             return;
         }
 
@@ -72,7 +70,7 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
             if (!EnablePlayerPostProcessing(commandPlayer, state))
             {
                 state.Enabled = false;
-                Reply(player, commandInfo, $"{Config.ChatPrefix} Failed to create nightvision effect.");
+                Reply(player, commandInfo, $"{ChatPrefix} 创建夜视仪效果失败");
                 return;
             }
         }
@@ -81,8 +79,8 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
             DisablePlayerPostProcessing(player.Slot);
         }
 
-        var status = state.Enabled ? "enabled" : "disabled";
-        Reply(player, commandInfo, $"{Config.ChatPrefix} Nightvision {status}.");
+        var status = state.Enabled ? "\x04已开启" : "\x07已关闭";
+        Reply(player, commandInfo, $"{ChatPrefix} 夜视仪{status}");
     }
 
     [ConsoleCommand("css_nvi")]
@@ -90,7 +88,7 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
     {
         if (!IsAliveHumanPlayer(player))
         {
-            Reply(player, commandInfo, $"{Config.ChatPrefix} You must be alive to change nightvision intensity.");
+            Reply(player, commandInfo, $"{ChatPrefix} 你必须在存活状态下才能调整夜视仪亮度");
             return;
         }
 
@@ -98,19 +96,19 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
         var state = GetOrCreatePlayerState(player);
         if (!state.Enabled)
         {
-            Reply(player, commandInfo, $"{Config.ChatPrefix} Turn on nightvision first.");
+            Reply(player, commandInfo, $"{ChatPrefix} 请先开启夜视仪");
             return;
         }
 
         if (commandInfo.ArgCount < 2)
         {
-            Reply(player, commandInfo, $"{Config.ChatPrefix} Usage: !nvi <intensity>");
+            Reply(player, commandInfo, $"{ChatPrefix} 用法：!nvi <亮度>");
             return;
         }
 
         if (!TryParseIntensity(commandInfo.GetArg(1), out var intensity))
         {
-            Reply(player, commandInfo, $"{Config.ChatPrefix} Please provide a valid float value.");
+            Reply(player, commandInfo, $"{ChatPrefix} 请输入有效的小数数值");
             return;
         }
 
@@ -119,12 +117,12 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
         if (!EnablePlayerPostProcessing(commandPlayer, state))
         {
             state.Enabled = false;
-            Reply(player, commandInfo, $"{Config.ChatPrefix} Failed to update nightvision intensity.");
+            Reply(player, commandInfo, $"{ChatPrefix} 更新夜视仪亮度失败");
             return;
         }
 
         var intensityText = state.Intensity.ToString("0.###", CultureInfo.InvariantCulture);
-        Reply(player, commandInfo, $"{Config.ChatPrefix} Intensity set to {intensityText}.");
+        Reply(player, commandInfo, $"{ChatPrefix} 夜视仪亮度已设置为 {intensityText}");
     }
 
     [GameEventHandler(HookMode.Post)]
@@ -231,7 +229,7 @@ public class Nightvision : BasePlugin, IPluginConfig<NightvisionConfig>
         var postProcessingVolume = Utilities.CreateEntityByName<CPostProcessingVolume>("post_processing_volume");
         if (postProcessingVolume == null)
         {
-            Console.WriteLine($"[Nightvision] Failed to create post_processing_volume for slot {player.Slot}");
+            Console.WriteLine($"[Nightvision] 为槽位 {player.Slot} 创建 post_processing_volume 失败");
             return false;
         }
 
